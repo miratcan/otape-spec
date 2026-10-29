@@ -1,0 +1,208 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "otape-manifest-1.0.schema.json",
+  "title": "oTAPE 1.0 manifest",
+  "description": "manifest.json of an oTAPE 1.0 cassette (.otape). Normative text: spec/oTAPE-1.0.md. The schema checks structure; rules that span fields (e.g. recorded_frames <= side length) are in the specification. Unknown properties are allowed everywhere so that minor versions and extensions stay compatible.",
+  "type": "object",
+  "required": ["format", "format_version", "cassette", "sides"],
+  "properties": {
+    "format": { "const": "oTAPE" },
+    "format_version": {
+      "type": "string",
+      "pattern": "^1\\.(0|[1-9][0-9]*)$",
+      "description": "MAJOR.MINOR. This schema covers major version 1."
+    },
+    "cassette": { "$ref": "#/$defs/cassette" },
+    "sides": {
+      "type": "object",
+      "required": ["A", "B"],
+      "properties": {
+        "A": { "$ref": "#/$defs/side" },
+        "B": { "$ref": "#/$defs/side" }
+      }
+    },
+    "appearance": { "$ref": "#/$defs/appearance" },
+    "jcard": { "$ref": "#/$defs/jcard" },
+    "artwork": { "$ref": "#/$defs/artwork" },
+    "booklet": { "$ref": "#/$defs/booklet" },
+    "history": { "type": "array", "items": { "$ref": "#/$defs/historyEvent" } },
+    "extensions": {
+      "type": "object",
+      "description": "Implementation-specific data keyed by reverse-DNS identifier.",
+      "propertyNames": { "pattern": "^[a-z0-9-]+(\\.[a-z0-9-]+)+$" },
+      "additionalProperties": { "type": "object" }
+    }
+  },
+  "$defs": {
+    "uuid": {
+      "type": "string",
+      "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+    },
+    "timestamp": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\\.[0-9]+)?(Z|[+-][0-9]{2}:[0-9]{2})$"
+    },
+    "color": { "type": "string", "pattern": "^#([0-9A-Fa-f]{6}|[0-9A-Fa-f]{8})$" },
+    "path": {
+      "type": "string",
+      "description": "Relative path inside the archive: forward slashes, no leading slash, no '..' segment.",
+      "pattern": "^(?!/)(?!.*(^|/)\\.\\.(/|$))[^\\\\]+$"
+    },
+    "frame": { "type": "integer", "minimum": 0 },
+    "fontRole": { "enum": ["marker", "pen", "typewriter", "sans", "serif", "stencil"] },
+    "writeProtect": { "enum": ["intact", "broken", "taped_over"] },
+    "cassette": {
+      "type": "object",
+      "required": ["id", "type", "side_length_seconds", "created_at"],
+      "properties": {
+        "id": { "$ref": "#/$defs/uuid" },
+        "serial_number": { "type": "string", "maxLength": 64 },
+        "title": { "type": "string", "maxLength": 200 },
+        "creator": { "type": "string", "maxLength": 200 },
+        "description": { "type": "string" },
+        "genre": { "type": "string" },
+        "notes": { "type": "string" },
+        "type": { "enum": ["C46", "C60", "C90", "C120", "custom"] },
+        "side_length_seconds": { "type": "integer", "minimum": 1, "maximum": 5400 },
+        "timeline_rate": { "enum": [44100, 48000] },
+        "created_at": { "$ref": "#/$defs/timestamp" },
+        "modified_at": { "$ref": "#/$defs/timestamp" },
+        "created_with": { "type": "string" },
+        "modified_with": { "type": "string" },
+        "generation": { "type": "integer", "minimum": 0 },
+        "source_cassette_id": { "$ref": "#/$defs/uuid" },
+        "location": { "type": "string" },
+        "date_recorded": { "type": "string" }
+      },
+      "allOf": [
+        { "if": { "properties": { "type": { "const": "C46" } } }, "then": { "properties": { "side_length_seconds": { "const": 1380 } } } },
+        { "if": { "properties": { "type": { "const": "C60" } } }, "then": { "properties": { "side_length_seconds": { "const": 1800 } } } },
+        { "if": { "properties": { "type": { "const": "C90" } } }, "then": { "properties": { "side_length_seconds": { "const": 2700 } } } },
+        { "if": { "properties": { "type": { "const": "C120" } } }, "then": { "properties": { "side_length_seconds": { "const": 3600 } } } }
+      ]
+    },
+    "audio": {
+      "type": "object",
+      "required": ["file", "codec", "recorded_frames"],
+      "properties": {
+        "file": { "$ref": "#/$defs/path" },
+        "codec": {
+          "type": "string",
+          "description": "aac-lc is required for players; alac, flac and pcm are optional in 1.0."
+        },
+        "sample_rate": { "type": "integer", "minimum": 8000 },
+        "channels": { "enum": [1, 2] },
+        "bit_rate": { "type": "integer", "minimum": 1 },
+        "recorded_frames": { "$ref": "#/$defs/frame" },
+        "duration_seconds": { "type": "number", "minimum": 0 }
+      }
+    },
+    "marker": {
+      "type": "object",
+      "required": ["frame", "title"],
+      "properties": {
+        "frame": { "$ref": "#/$defs/frame" },
+        "title": { "type": "string" },
+        "kind": { "type": "string", "description": "track, voice or note; other values are treated as note." }
+      }
+    },
+    "side": {
+      "type": "object",
+      "required": ["write_protect"],
+      "properties": {
+        "title": { "type": "string", "maxLength": 200 },
+        "write_protect": { "$ref": "#/$defs/writeProtect" },
+        "audio": { "oneOf": [{ "type": "null" }, { "$ref": "#/$defs/audio" }] },
+        "markers": { "type": "array", "items": { "$ref": "#/$defs/marker" } }
+      }
+    },
+    "appearance": {
+      "type": "object",
+      "properties": {
+        "preset": { "type": "string" },
+        "shell": {
+          "type": "object",
+          "properties": {
+            "color": { "$ref": "#/$defs/color" },
+            "finish": { "enum": ["opaque", "transparent"] }
+          }
+        },
+        "label": {
+          "type": "object",
+          "properties": {
+            "style": { "enum": ["ruled", "stripes", "kraft", "gradient", "plain"] },
+            "paper": { "$ref": "#/$defs/color" },
+            "ink": { "$ref": "#/$defs/color" },
+            "accent": { "$ref": "#/$defs/color" },
+            "font": { "$ref": "#/$defs/fontRole" }
+          }
+        }
+      }
+    },
+    "jcard": {
+      "type": "object",
+      "properties": {
+        "card_color": { "$ref": "#/$defs/color" },
+        "ink": { "$ref": "#/$defs/color" },
+        "font": { "$ref": "#/$defs/fontRole" },
+        "front": {
+          "type": "object",
+          "properties": { "title": { "type": "string" }, "subtitle": { "type": "string" } }
+        },
+        "spine": { "type": "object", "properties": { "text": { "type": "string" } } },
+        "flap": { "type": "object", "properties": { "text": { "type": "string" } } },
+        "tracklist": {
+          "type": "object",
+          "properties": {
+            "A": { "type": "array", "items": { "type": "string" } },
+            "B": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "dedication": { "type": "string" }
+      }
+    },
+    "artwork": {
+      "type": "object",
+      "properties": {
+        "cassette_face_a": { "$ref": "#/$defs/path" },
+        "cassette_face_b": { "$ref": "#/$defs/path" },
+        "label_a": { "$ref": "#/$defs/path" },
+        "label_b": { "$ref": "#/$defs/path" },
+        "jcard_front": { "$ref": "#/$defs/path" },
+        "jcard_spine": { "$ref": "#/$defs/path" },
+        "jcard_flap": { "$ref": "#/$defs/path" },
+        "thumbnail": { "$ref": "#/$defs/path" }
+      },
+      "additionalProperties": { "$ref": "#/$defs/path" }
+    },
+    "booklet": {
+      "type": "object",
+      "properties": {
+        "panels": { "type": "array", "items": { "$ref": "#/$defs/path" } },
+        "html": { "$ref": "#/$defs/path" },
+        "notes": { "$ref": "#/$defs/path" }
+      }
+    },
+    "historyEvent": {
+      "type": "object",
+      "required": ["type", "timestamp"],
+      "properties": {
+        "type": { "type": "string" },
+        "timestamp": { "$ref": "#/$defs/timestamp" },
+        "app": { "type": "string" },
+        "side": { "enum": ["A", "B"] },
+        "state": { "$ref": "#/$defs/writeProtect" },
+        "start_frame": { "$ref": "#/$defs/frame" },
+        "end_frame": { "$ref": "#/$defs/frame" },
+        "source": { "enum": ["file", "line", "radio", "microphone", "dub", "generated"] },
+        "source_format": { "type": "string" }
+      },
+      "allOf": [
+        { "if": { "properties": { "type": { "const": "recorded" } } },
+          "then": { "required": ["side", "start_frame", "end_frame"] } },
+        { "if": { "properties": { "type": { "const": "write_protect_changed" } } },
+          "then": { "required": ["side", "state"] } }
+      ]
+    }
+  }
+}

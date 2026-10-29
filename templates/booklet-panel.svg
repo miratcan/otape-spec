@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="534.4" viewBox="-14 -14 190 133.6">
+<title>oTAPE booklet panel template</title>
+<style>
+  text { font-family: Helvetica, Arial, sans-serif; fill: #333; }
+  .trim { fill: #fff; stroke: #111; stroke-width: 0.25; }
+  .safe { fill: none; stroke: #2a9d8f; stroke-width: 0.2; stroke-dasharray: 1 0.6; }
+  .keep { fill: rgba(230,57,70,0.18); stroke: #e63946; stroke-width: 0.2; }
+  .zone { fill: rgba(69,123,157,0.12); stroke: #457b9d; stroke-width: 0.15; }
+  .fold { stroke: #999; stroke-width: 0.2; stroke-dasharray: 2 1; }
+  .dim { stroke: #666; stroke-width: 0.12; fill: none; }
+  .note { font-size: 1.8px; }
+  .small { font-size: 1.3px; fill: #555; }
+  .head { font-size: 2.6px; font-weight: bold; }
+</style>
+<rect class="trim" x="0" y="0" width="63.5" height="101.6" rx="0"/>
+<rect class="safe" x="3" y="3" width="57.5" height="95.6" rx="0"/>
+<text class="head" x="31.75" y="40" text-anchor="middle">booklet panel NN</text>
+<text class="note" x="31.75" y="45" text-anchor="middle">1524 × 2438 px @ 24 px/mm</text>
+<text class="small" x="31.75" y="96.6" text-anchor="middle">safe area 3 mm</text>
+<text class="head" x="0" y="-8" text-anchor="start">oTAPE 1.0 · booklet.panels[] · 63.5 × 101.6 mm, portrait, reading order</text>
+<path class="dim" d="M0 105.6V107.6M0 106.6H63.5M63.5 105.6V107.6"/>
+<text class="small" x="31.75" y="106" text-anchor="middle">63.5 mm</text>
+<path class="dim" d="M67.5 0H69.5M68.5 0V101.6M67.5 101.6H69.5"/>
+<text class="small" x="69.7" y="50.8" text-anchor="middle" transform="rotate(90 69.7 50.8)">101.6 mm</text>
+</svg>

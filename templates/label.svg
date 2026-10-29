@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="296" viewBox="-14 -14 190 74">
+<title>oTAPE label template</title>
+<style>
+  text { font-family: Helvetica, Arial, sans-serif; fill: #333; }
+  .trim { fill: #fff; stroke: #111; stroke-width: 0.25; }
+  .safe { fill: none; stroke: #2a9d8f; stroke-width: 0.2; stroke-dasharray: 1 0.6; }
+  .keep { fill: rgba(230,57,70,0.18); stroke: #e63946; stroke-width: 0.2; }
+  .zone { fill: rgba(69,123,157,0.12); stroke: #457b9d; stroke-width: 0.15; }
+  .fold { stroke: #999; stroke-width: 0.2; stroke-dasharray: 2 1; }
+  .dim { stroke: #666; stroke-width: 0.12; fill: none; }
+  .note { font-size: 1.8px; }
+  .small { font-size: 1.3px; fill: #555; }
+  .head { font-size: 2.6px; font-weight: bold; }
+</style>
+<rect class="trim" x="0" y="0" width="89" height="42" rx="2"/>
+<rect class="safe" x="2" y="2" width="85" height="38" rx="2"/>
+<rect class="keep" x="24" y="17.5" width="41" height="13" rx="1.5"/>
+<circle class="keep" cx="23.3" cy="24" r="9"/>
+<circle class="keep" cx="65.7" cy="24" r="9"/>
+<rect class="zone" x="2.5" y="3" width="6.5" height="8" rx="0"/>
+<rect class="zone" x="11" y="3.5" width="75.5" height="7" rx="0"/>
+<rect class="zone" x="11" y="10.5" width="75.5" height="4.5" rx="0"/>
+<rect class="zone" x="0" y="33" width="89" height="9" rx="0"/>
+<rect class="zone" x="70" y="35" width="16.5" height="5" rx="0"/>
+<text class="head" x="5.75" y="9.5" text-anchor="middle">A</text>
+<text class="note" x="12" y="9.3" text-anchor="start">title (cassette.title) · baseline 9.5 mm</text>
+<text class="note" x="12" y="14" text-anchor="start">side title (sides.A.title) · baseline 14 mm</text>
+<text class="note" x="2.5" y="36" text-anchor="start">bottom band (stripes / gradient)</text>
+<text class="note" x="86" y="38.8" text-anchor="end">type C60</text>
+<text class="small" x="44.5" y="24.6" text-anchor="middle">keep-out: window + hub holes + 0.5 mm</text>
+<text class="head" x="0" y="-8" text-anchor="start">oTAPE 1.0 · label_a / label_b · 89 × 42 mm · 2136 × 1008 px @ 24 px/mm (min 1068 × 504)</text>
+<text class="note" x="0" y="-4.5" text-anchor="start">Green dashed = safe area (2 mm). Red = keep-out, must be transparent. Blue = lettering zones of the procedural label. Corner radius 2 mm.</text>
+<path class="dim" d="M0 46V48M0 47H89M89 46V48"/>
+<text class="small" x="44.5" y="46.4" text-anchor="middle">89 mm</text>
+<path class="dim" d="M93 0H95M94 0V42M93 42H95"/>
+<text class="small" x="95.2" y="21" text-anchor="middle" transform="rotate(90 95.2 21)">42 mm</text>
+</svg>
