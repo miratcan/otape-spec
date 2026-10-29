@@ -9,7 +9,7 @@ without royalties or permission.
 
 > A cassette is not just audio. It is audio, sides, artwork, packaging, protection and memory.
 
-**Current version: 1.0** (release candidate, 2026-10-29) · [Read the specification →](oTAPE-1.0.md)
+**Current version: 1.0** (release candidate, 2026-10-29) · [otape.org](https://otape.org) · [Read the specification →](oTAPE-1.0.md)
 
 ---
 
@@ -102,11 +102,18 @@ A recorder also overwrites in place, keeps `recorded_frames` as a high-water mar
 tabs, and preserves fields and files it doesn't understand. [§16](oTAPE-1.0.md#16-conformance) lists every
 requirement. [`tools/make_examples.py`](tools/make_examples.py) is a short, readable reference writer.
 
+## Website
+
+[otape.org](https://otape.org) is the public home of the format. It introduces oTAPE and includes the **oTAPE Web Deck**: a working player of about 1,200 lines of plain JavaScript, with no libraries. It plays the reference cassette from the specification, or any `.otape` dropped onto the page. The file stays in the browser and is never uploaded.
+
+Space plays and stops. The arrow keys rewind and fast-forward, F flips the cassette, E ejects it.
+
 ## Implementations
 
 | Name | Platform | Role |
 | --- | --- | --- |
 | [oTape Studio](https://github.com/otape-studio/otape-studio) | macOS 14+ | Reference recorder and player, by Jan Osio |
+| [oTAPE Web Deck](https://otape.org) | Any modern browser | Player, on [otape.org](https://otape.org) |
 
 Building something with oTAPE? Open a pull request to add it here.
 
